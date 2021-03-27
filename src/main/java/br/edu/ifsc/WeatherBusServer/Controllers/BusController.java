@@ -1,8 +1,6 @@
 package br.edu.ifsc.WeatherBusServer.Controllers;
 
-import br.edu.ifsc.WeatherBusServer.Domain.Bus;
-import br.edu.ifsc.WeatherBusServer.Domain.Prediction;
-import br.edu.ifsc.WeatherBusServer.Domain.Stop;
+import br.edu.ifsc.WeatherBusServer.Domain.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,13 +18,12 @@ public class BusController {
 
     @RequestMapping(value = "/exemploBus", method = RequestMethod.GET)
     public Bus getBus() {
-
-        List<Stop> stops = new ArrayList<>();
-        Stop stop = new Stop(0, "Stop 1", 41.848946, -87.8520887);
-        stops.add(stop);
+        Stop stop = new Stop("Stop 1", 41.848946, -87.8520887);
+        stop.setId(0);
 
         List<Prediction> predictions = new ArrayList<>();
-        Prediction prediction = new Prediction(0, new Date(), stop, 500);
+        Prediction prediction = new Prediction(new Date(), stop, 500);
+        prediction.setId(0);
         predictions.add(prediction);
 
 
