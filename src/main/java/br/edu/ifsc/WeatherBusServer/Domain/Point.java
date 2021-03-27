@@ -1,11 +1,37 @@
 package br.edu.ifsc.WeatherBusServer.Domain;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
 public class Point {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private int sequenceNumber;
     private boolean isBusStop;
     private double lat;
     private double lon;
+
+    @ManyToOne
+    @JoinColumn(name = "route_id")
+    private Route route;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "stop_id")
+    private Stop stop;
+
+    public Point() {
+    }
+
+    public Point(int sequenceNumber, boolean isBusStop, double lat, double lon, Stop stop) {
+        this.sequenceNumber = sequenceNumber;
+        this.isBusStop = isBusStop;
+        this.lat = lat;
+        this.lon = lon;
+        this.stop = stop;
+    }
 
     public int getId() {
         return id;
@@ -47,6 +73,14 @@ public class Point {
         this.lon = lon;
     }
 
+    public Stop getStop() {
+        return stop;
+    }
+
+    public void setStop(Stop stop) {
+        this.stop = stop;
+    }
+
     @Override
     public String toString() {
         return "Point{" +
@@ -55,6 +89,7 @@ public class Point {
                 ", isBusStop=" + isBusStop +
                 ", lat=" + lat +
                 ", lon=" + lon +
+                ", stop=" + stop +
                 '}';
     }
 }

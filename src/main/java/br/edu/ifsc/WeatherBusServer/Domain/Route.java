@@ -1,10 +1,31 @@
 package br.edu.ifsc.WeatherBusServer.Domain;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
 public class Route {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String name;
     private String direction;
+
+    @OneToMany(mappedBy = "route")
+    private List<Bus> bus;
+
+    @OneToMany(mappedBy = "route")
+    private List<Point> points;
+
+    public Route() {
+    }
+
+    public Route(String name, String direction, List<Point> points) {
+        this.name = name;
+        this.direction = direction;
+        this.points = points;
+    }
 
     public int getId() {
         return id;
@@ -30,14 +51,21 @@ public class Route {
         this.direction = direction;
     }
 
+    public List<Point> getPoints() {
+        return points;
+    }
+
+    public void setPoints(List<Point> points) {
+        this.points = points;
+    }
+
     @Override
     public String toString() {
         return "Route{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", Direction='" + direction + '\'' +
+                ", direction='" + direction + '\'' +
+                ", points=" + points +
                 '}';
     }
-
-
 }

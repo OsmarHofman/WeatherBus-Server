@@ -1,37 +1,46 @@
 package br.edu.ifsc.WeatherBusServer.Domain;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+@Entity
 public class Bus {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private Date timestamp;
     private double lat;
     private double lon;
     private String destination;
     private boolean isDelayed;
-    private List<Stop> stops;
+
+    @JoinColumn(name = "route_id", referencedColumnName = "Id")
+    @ManyToOne()
+    private Route route;
+
+    @OneToMany(mappedBy = "bus")
     private List<Prediction> predictions;
+
 
     public Bus() {
     }
 
-    public Bus(int id, Date timestamp, double lat, double lon, String destination, boolean isDelayed, List<Stop> stops, List<Prediction> predictions) {
-        this.id = id;
+    public Bus(Date timestamp, double lat, double lon, String destination, boolean isDelayed, Route route, List<Prediction> predictions) {
         this.timestamp = timestamp;
         this.lat = lat;
         this.lon = lon;
         this.destination = destination;
         this.isDelayed = isDelayed;
-        this.stops = stops;
+        this.route = route;
         this.predictions = predictions;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -75,12 +84,12 @@ public class Bus {
         isDelayed = delayed;
     }
 
-    public List<Stop> getStops() {
-        return stops;
+    public Route getRoute() {
+        return route;
     }
 
-    public void setStops(List<Stop> stops) {
-        this.stops = stops;
+    public void setRoute(Route route) {
+        this.route = route;
     }
 
     public List<Prediction> getPredictions() {
@@ -100,7 +109,7 @@ public class Bus {
                 ", lon=" + lon +
                 ", destination='" + destination + '\'' +
                 ", isDelayed=" + isDelayed +
-                ", stops=" + stops +
+                ", route=" + route +
                 ", predictions=" + predictions +
                 '}';
     }

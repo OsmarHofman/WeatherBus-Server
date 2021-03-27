@@ -1,17 +1,31 @@
 package br.edu.ifsc.WeatherBusServer.Domain;
 
+import javax.persistence.*;
+
+@Entity
 public class Stop {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String name;
     private double lat;
     private double lon;
 
+    @ManyToOne
+    @JoinColumn(name = "bus_id")
+    private Bus bus;
+
+    @OneToOne(mappedBy = "stop")
+    private Point point;
+
+    @OneToOne(mappedBy = "stop")
+    private Prediction prediction;
+
     public Stop() {
     }
 
-    public Stop(int id, String name, double lat, double lon) {
-        this.id = id;
+    public Stop(String name, double lat, double lon) {
         this.name = name;
         this.lat = lat;
         this.lon = lon;

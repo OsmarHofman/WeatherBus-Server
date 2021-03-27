@@ -1,18 +1,31 @@
 package br.edu.ifsc.WeatherBusServer.Domain;
 
+import javax.persistence.*;
 import java.util.Date;
 
+// Prediction vai ficar somente no bus
+@Entity
 public class Prediction {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private Date timestamp;
-    private Stop stop;
     public float distanceToDestination;
+
+    @ManyToOne
+    @JoinColumn(name = "bus_id")
+    private Bus bus;
+
+    @JoinColumn(name = "stop_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    private Stop stop;
+
 
     public Prediction() {
     }
 
-    public Prediction(int id, Date timestamp, Stop stop, float distanceToDestination) {
-        this.id = id;
+    public Prediction(Date timestamp, Stop stop, float distanceToDestination) {
         this.timestamp = timestamp;
         this.stop = stop;
         this.distanceToDestination = distanceToDestination;

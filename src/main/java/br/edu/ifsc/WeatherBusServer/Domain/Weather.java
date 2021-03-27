@@ -1,21 +1,61 @@
 package br.edu.ifsc.WeatherBusServer.Domain;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.util.Date;
+import java.util.Map;
+
+@Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Weather {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @JsonProperty("LocalObservationDateTime")
     private Date LocalObservationDateTime;
+
+    @JsonProperty("EpochTime")
     private String EpochTime;
+
+    @JsonProperty("WeatherText")
     private String WeatherText;
+
+    @JsonProperty("WeatherIcon")
     private int WeatherIcon;
+
+    @JsonProperty("HasPrecipitation")
     private boolean HasPrecipitation;
+
+    @JsonProperty("PrecipitationType")
     private String PrecipitationType;
+
     private String LocalSourceName;
     private int LocalSourceIconCode;
+
+    @JsonProperty("IsDayTime")
     private boolean IsDayTime;
-    private float celciusTemperature;
+
+    @JsonProperty("Temperature,Metric,Value")
+    private double celciusTemperature;
+
+    @JsonProperty("Link")
     private String AccuWeatherSiteLink;
 
     public Weather() {
+    }
+
+    @JsonProperty("Temperature")
+    @SuppressWarnings("unchecked")
+    private void celciusTemperatureDeserializer(Map<String, Object> serializedCelcius) {
+        Map<String, Object> metric = (Map<String, Object>) serializedCelcius.get("Metric");
+        celciusTemperature = (double) metric.get("Value");
     }
 
     public Date getLocalObservationDateTime() {
@@ -90,7 +130,7 @@ public class Weather {
         IsDayTime = dayTime;
     }
 
-    public float getCelciusTemperature() {
+    public double getCelciusTemperature() {
         return celciusTemperature;
     }
 
