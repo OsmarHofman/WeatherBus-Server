@@ -19,34 +19,30 @@ public class Weather {
     private Integer id;
 
     @JsonProperty("LocalObservationDateTime")
-    private Date LocalObservationDateTime;
+    private Date localObservationDateTime;
 
     @JsonProperty("EpochTime")
-    private String EpochTime;
+    private String epochTime;
 
     @JsonProperty("WeatherText")
-    private String WeatherText;
+    private String weatherText;
 
     @JsonProperty("WeatherIcon")
-    private int WeatherIcon;
+    private int weatherIcon;
 
     @JsonProperty("HasPrecipitation")
-    private boolean HasPrecipitation;
+    private boolean hasPrecipitation;
 
     @JsonProperty("PrecipitationType")
-    private String PrecipitationType;
-
-    private String LocalSourceName;
-    private int LocalSourceIconCode;
+    private String precipitationType;
 
     @JsonProperty("IsDayTime")
-    private boolean IsDayTime;
+    private boolean isDayTime;
 
-    @JsonProperty("Temperature,Metric,Value")
     private double celciusTemperature;
 
     @JsonProperty("Link")
-    private String AccuWeatherSiteLink;
+    private String accuWeatherSiteLink;
 
     public Weather() {
     }
@@ -59,75 +55,59 @@ public class Weather {
     }
 
     public Date getLocalObservationDateTime() {
-        return LocalObservationDateTime;
+        return localObservationDateTime;
     }
 
     public void setLocalObservationDateTime(Date localObservationDateTime) {
-        LocalObservationDateTime = localObservationDateTime;
+        this.localObservationDateTime = localObservationDateTime;
     }
 
     public String getEpochTime() {
-        return EpochTime;
+        return epochTime;
     }
 
     public void setEpochTime(String epochTime) {
-        EpochTime = epochTime;
+        this.epochTime = epochTime;
     }
 
     public String getWeatherText() {
-        return WeatherText;
+        return weatherText;
     }
 
     public void setWeatherText(String weatherText) {
-        WeatherText = weatherText;
+        this.weatherText = weatherText;
     }
 
     public int getWeatherIcon() {
-        return WeatherIcon;
+        return weatherIcon;
     }
 
     public void setWeatherIcon(int weatherIcon) {
-        WeatherIcon = weatherIcon;
+        this.weatherIcon = weatherIcon;
     }
 
     public boolean isHasPrecipitation() {
-        return HasPrecipitation;
+        return hasPrecipitation;
     }
 
     public void setHasPrecipitation(boolean hasPrecipitation) {
-        HasPrecipitation = hasPrecipitation;
+        this.hasPrecipitation = hasPrecipitation;
     }
 
     public String getPrecipitationType() {
-        return PrecipitationType;
+        return precipitationType;
     }
 
     public void setPrecipitationType(String precipitationType) {
-        PrecipitationType = precipitationType;
-    }
-
-    public String getLocalSourceName() {
-        return LocalSourceName;
-    }
-
-    public void setLocalSourceName(String localSourceName) {
-        LocalSourceName = localSourceName;
-    }
-
-    public int getLocalSourceIconCode() {
-        return LocalSourceIconCode;
-    }
-
-    public void setLocalSourceIconCode(int localSourceIconCode) {
-        LocalSourceIconCode = localSourceIconCode;
+        this.precipitationType = precipitationType;
     }
 
     public boolean isDayTime() {
-        return IsDayTime;
+        return isDayTime;
     }
 
     public void setDayTime(boolean dayTime) {
-        IsDayTime = dayTime;
+        isDayTime = dayTime;
     }
 
     public double getCelciusTemperature() {
@@ -139,27 +119,26 @@ public class Weather {
     }
 
     public String getAccuWeatherSiteLink() {
-        return AccuWeatherSiteLink;
+        return accuWeatherSiteLink;
     }
 
     public void setAccuWeatherSiteLink(String accuWeatherSiteLink) {
-        AccuWeatherSiteLink = accuWeatherSiteLink;
+        this.accuWeatherSiteLink = accuWeatherSiteLink;
     }
 
     @Override
     public String toString() {
         return "Weather{" +
-                "LocalObservationDateTime=" + LocalObservationDateTime +
-                ", EpochTime='" + EpochTime + '\'' +
-                ", WeatherText='" + WeatherText + '\'' +
-                ", WeatherIcon=" + WeatherIcon +
-                ", HasPrecipitationType=" + HasPrecipitation +
-                ", PrecipitationType='" + PrecipitationType + '\'' +
-                ", LocalSourceName='" + LocalSourceName + '\'' +
-                ", LocalSourceIconCode=" + LocalSourceIconCode +
-                ", IsDayTime=" + IsDayTime +
+                "id=" + id +
+                ", LocalObservationDateTime=" + localObservationDateTime +
+                ", EpochTime='" + epochTime + '\'' +
+                ", WeatherText='" + weatherText + '\'' +
+                ", WeatherIcon=" + weatherIcon +
+                ", HasPrecipitation=" + hasPrecipitation +
+                ", PrecipitationType='" + precipitationType + '\'' +
+                ", IsDayTime=" + isDayTime +
                 ", CelciusTemperature=" + celciusTemperature +
-                ", AccuWeatherSiteLink='" + AccuWeatherSiteLink + '\'' +
+                ", AccuWeatherSiteLink='" + accuWeatherSiteLink + '\'' +
                 '}';
     }
 }

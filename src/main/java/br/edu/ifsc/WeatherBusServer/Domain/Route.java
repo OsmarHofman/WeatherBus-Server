@@ -1,5 +1,7 @@
 package br.edu.ifsc.WeatherBusServer.Domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -9,7 +11,11 @@ public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    private Integer rtCode;
     private String name;
+
+    @JsonProperty("dir")
     private String direction;
 
     @OneToMany(mappedBy = "route")
@@ -21,7 +27,8 @@ public class Route {
     public Route() {
     }
 
-    public Route(String name, String direction, List<Point> points) {
+    public Route(Integer rtCode, String name, String direction, List<Point> points) {
+        this.rtCode = rtCode;
         this.name = name;
         this.direction = direction;
         this.points = points;
@@ -33,6 +40,14 @@ public class Route {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Integer getRtCode() {
+        return rtCode;
+    }
+
+    public void setRtCode(Integer routeNumber) {
+        this.rtCode = routeNumber;
     }
 
     public String getName() {
@@ -63,8 +78,10 @@ public class Route {
     public String toString() {
         return "Route{" +
                 "id=" + id +
+                ", routeNumber=" + rtCode +
                 ", name='" + name + '\'' +
                 ", direction='" + direction + '\'' +
+                ", bus=" + bus +
                 ", points=" + points +
                 '}';
     }

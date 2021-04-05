@@ -16,18 +16,6 @@ public class WeatherBusServerApplication {
         SpringApplication.run(WeatherBusServerApplication.class, args);
     }
 
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.build();
-    }
 
-    @Bean
-    public CommandLineRunner run(RestTemplate restTemplate) {
-        return args -> {
-            Weather[] rawData = restTemplate.getForObject(
-                    "http://dataservice.accuweather.com/currentconditions/v1/348308?apikey=9Sz5Xrb6oB12NQin96K7ICRTKy3msslr", Weather[].class);
-            System.out.println(rawData[0]);
-        };
-    }
 
 }
