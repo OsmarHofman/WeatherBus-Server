@@ -10,34 +10,29 @@ public class Point {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private int sequenceNumber;
-    private boolean isBusStop;
     private double lat;
     private double lon;
+    private String stopName;
 
     @ManyToOne
-    @JoinColumn(name = "route_id")
+    @JoinColumn(name = "bus_id")
     private Route route;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "stop_id")
-    private Stop stop;
 
     public Point() {
     }
 
-    public Point(int sequenceNumber, boolean isBusStop, double lat, double lon, Stop stop) {
+    public Point(int sequenceNumber, double lat, double lon, String stopName) {
         this.sequenceNumber = sequenceNumber;
-        this.isBusStop = isBusStop;
         this.lat = lat;
         this.lon = lon;
-        this.stop = stop;
+        this.stopName = stopName;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -47,14 +42,6 @@ public class Point {
 
     public void setSequenceNumber(int sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
-    }
-
-    public boolean isBusStop() {
-        return isBusStop;
-    }
-
-    public void setBusStop(boolean busStop) {
-        isBusStop = busStop;
     }
 
     public double getLat() {
@@ -73,12 +60,12 @@ public class Point {
         this.lon = lon;
     }
 
-    public Stop getStop() {
-        return stop;
+    public String getStopName() {
+        return stopName;
     }
 
-    public void setStop(Stop stop) {
-        this.stop = stop;
+    public void setStopName(String stopName) {
+        this.stopName = stopName;
     }
 
     @Override
@@ -86,10 +73,9 @@ public class Point {
         return "Point{" +
                 "id=" + id +
                 ", sequenceNumber=" + sequenceNumber +
-                ", isBusStop=" + isBusStop +
                 ", lat=" + lat +
                 ", lon=" + lon +
-                ", stop=" + stop +
+                ", stopName='" + stopName + '\'' +
                 '}';
     }
 }

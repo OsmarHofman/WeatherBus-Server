@@ -11,23 +11,20 @@ public class Prediction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private Date timestamp;
-    public float distanceToDestination;
+    private float distanceToDestination;
+    private String stopName;
 
     @ManyToOne
     @JoinColumn(name = "bus_id")
     private Bus bus;
 
-    @JoinColumn(name = "stop_id")
-    @OneToOne(cascade = CascadeType.ALL)
-    private Stop stop;
-
 
     public Prediction() {
     }
 
-    public Prediction(Date timestamp, Stop stop, float distanceToDestination) {
+    public Prediction(Date timestamp, String stopName, float distanceToDestination) {
         this.timestamp = timestamp;
-        this.stop = stop;
+        this.stopName = stopName;
         this.distanceToDestination = distanceToDestination;
     }
 
@@ -47,14 +44,6 @@ public class Prediction {
         this.timestamp = timestamp;
     }
 
-    public Stop getStop() {
-        return stop;
-    }
-
-    public void setStop(Stop stop) {
-        this.stop = stop;
-    }
-
     public float getDistanceToDestination() {
         return distanceToDestination;
     }
@@ -63,13 +52,21 @@ public class Prediction {
         this.distanceToDestination = distanceToDestination;
     }
 
+    public String getStopName() {
+        return stopName;
+    }
+
+    public void setStopName(String stopName) {
+        this.stopName = stopName;
+    }
+
     @Override
     public String toString() {
         return "Prediction{" +
                 "id=" + id +
                 ", timestamp=" + timestamp +
-                ", stop=" + stop +
                 ", distanceToDestination=" + distanceToDestination +
+                ", stopName='" + stopName + '\'' +
                 '}';
     }
 }

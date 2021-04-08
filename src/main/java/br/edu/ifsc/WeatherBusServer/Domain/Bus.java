@@ -7,16 +7,14 @@ import java.util.List;
 @Entity
 public class Bus {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
     private Date timestamp;
     private double lat;
     private double lon;
     private String destination;
     private boolean isDelayed;
 
-    @JoinColumn(name = "route_id", referencedColumnName = "Id")
-    @ManyToOne()
+    @OneToOne(mappedBy = "bus")
     private Route route;
 
     @OneToMany(mappedBy = "bus")
@@ -26,21 +24,20 @@ public class Bus {
     public Bus() {
     }
 
-    public Bus(Date timestamp, double lat, double lon, String destination, boolean isDelayed, Route route, List<Prediction> predictions) {
+    public Bus(Date timestamp, double lat, double lon, String destination, boolean isDelayed, List<Prediction> predictions) {
         this.timestamp = timestamp;
         this.lat = lat;
         this.lon = lon;
         this.destination = destination;
         this.isDelayed = isDelayed;
-        this.route = route;
         this.predictions = predictions;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
