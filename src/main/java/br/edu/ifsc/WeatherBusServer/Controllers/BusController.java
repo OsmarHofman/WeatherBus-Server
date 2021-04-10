@@ -1,10 +1,14 @@
 package br.edu.ifsc.WeatherBusServer.Controllers;
 
 import br.edu.ifsc.WeatherBusServer.Domain.*;
+import br.edu.ifsc.WeatherBusServer.Repository.BusRepository;
+import br.edu.ifsc.WeatherBusServer.Repository.PointRepository;
+import br.edu.ifsc.WeatherBusServer.Repository.PredictionRepository;
+import br.edu.ifsc.WeatherBusServer.Repository.RouteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -14,7 +18,17 @@ import java.util.*;
 @RequestMapping(value = "/bus")
 public class BusController {
 
-    List<Route> routes = new ArrayList<>();
+    @Autowired
+    BusRepository busRepository;
+
+    @Autowired
+    RouteRepository routeRepository;
+
+    @Autowired
+    PointRepository pointRepository;
+
+    @Autowired
+    PredictionRepository predictionRepository;
 
     @RequestMapping(value = "/exemploBus", method = RequestMethod.GET)
     public Bus getBus() {
@@ -41,28 +55,15 @@ public class BusController {
     @RequestMapping(value = "/getRoutes", method = RequestMethod.GET)
     @SuppressWarnings("unchecked")
     public List<Route> getBusRoutes() {
-        this.routes = new ArrayList<>();
-        //TODO salvar em banco
+        List<Route> routes = routeRepository.findAll();
 
-        RestTemplate restTemplate = new RestTemplate();
-        var mappedRoutes = (Map<String, Object>)
-                restTemplate.getForObject(
-                        "http://www.ctabustracker.com/bustime/api/v2/getroutes?key=5vpALinxKHsDWZZXSvwhVqLda&format=json", Map.class)
-                        .get("bustime-response");
-
-        List<Map<String, Object>> routesList = (List<Map<String, Object>>) mappedRoutes.get("routes");
-        for (Map<String, Object> mappedRoute : routesList) {
-            Route route = new Route();
-            route.setId(mappedRoute.get("rt").toString());
-            route.setName(mappedRoute.get("rtnm").toString());
-            this.routes.add(route);
-        }
-        return this.routes;
+        return routes;
     }
 
-    @RequestMapping(value = "/getFullRouteById/{routeId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/insertData/{routeId}", method = RequestMethod.GET)
     @SuppressWarnings("unchecked")
-    public Route getFullRouteById(@PathVariable String routeId) throws ParseException, ClassNotFoundException {
+    public String insertData(@PathVariable String routeId) throws ParseException {
+
         RestTemplate restTemplate = new RestTemplate();
         var routes = (Map<String, Object>)
                 restTemplate.getForObject(
@@ -70,7 +71,22 @@ public class BusController {
                         .get("bustime-response");
 
         List<Map<String, Object>> mappedBuses = (List<Map<String, Object>>) routes.get("vehicle");
+        var baseRoute = routeRepository.findById(routeId);
+
+        String presentRouteId = null;
+        if (baseRoute.isPresent()) {
+            presentRouteId = baseRoute.get().getRouteBus().getId();
+        }
         Map<String, Object> mappedBus = mappedBuses.get(0);
+
+        if (presentRouteId != null) {
+            for (Map<String, Object> bus : mappedBuses) {
+                if (bus.get("vid").toString().equals(presentRouteId)) {
+                    mappedBus = bus;
+                }
+            }
+        }
+
         Bus routeBus = new Bus();
         routeBus.setId(mappedBus.get("vid").toString());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
@@ -79,6 +95,48 @@ public class BusController {
         routeBus.setLon(Double.parseDouble(mappedBus.get("lon").toString()));
         routeBus.setDestination(mappedBus.get("des").toString());
         routeBus.setDelayed((boolean) mappedBus.get("dly"));
+
+        busRepository.save(routeBus);
+
+        var mappedPrediction = (Map<String, Object>)
+                restTemplate.getForObject(
+                        "http://www.ctabustracker.com/bustime/api/v2/getpredictions?key=5vpALinxKHsDWZZXSvwhVqLda&vid=" + routeBus.getId() + "&format=json", Map.class)
+                        .get("bustime-response");
+
+        List<Map<String, Object>> predictionList = (List<Map<String, Object>>) mappedPrediction.get("prd");
+        List<Prediction> predictions = new ArrayList<>();
+        for (Map<String, Object> predictionItem : predictionList) {
+            Prediction prediction = new Prediction();
+            prediction.setDistanceToDestination((float) (Float.parseFloat(predictionItem.get("dstp").toString()) / 3.281));
+            prediction.setStopName(predictionItem.get("stpnm").toString());
+            prediction.setTimestamp(sdf.parse(predictionItem.get("prdtm").toString()));
+
+            prediction.setBus(routeBus);
+
+            predictions.add(prediction);
+        }
+
+        predictionRepository.saveAll(predictions);
+
+        var mappedRoutes = (Map<String, Object>)
+                restTemplate.getForObject(
+                        "http://www.ctabustracker.com/bustime/api/v2/getroutes?key=5vpALinxKHsDWZZXSvwhVqLda&format=json", Map.class)
+                        .get("bustime-response");
+
+
+        List<Map<String, Object>> routesList = (List<Map<String, Object>>) mappedRoutes.get("routes");
+        Route route = new Route();
+        for (Map<String, Object> mappedRoute : routesList) {
+            String mappedRouteId = mappedRoute.get("rt").toString();
+            if (mappedRouteId.equals(routeId)) {
+                route.setId(mappedRouteId);
+                route.setName(mappedRoute.get("rtnm").toString());
+                break;
+            }
+        }
+
+        route.setRouteBus(routeBus);
+
 
         var allPoints = (Map<String, Object>)
                 restTemplate.getForObject(
@@ -94,19 +152,22 @@ public class BusController {
             point.setSequenceNumber(Integer.parseInt(pointItem.get("seq").toString()));
             point.setLat(Double.parseDouble(pointItem.get("lat").toString()));
             point.setLon(Double.parseDouble(pointItem.get("lon").toString()));
-            String isStop = pointItem.get("lon").toString();
-            String stopName = "";
+            String isStop = pointItem.get("typ").toString();
+            String stopName = null;
             if (isStop.equals("S"))
-                stopName = pointItem.get("stnm").toString();
+                stopName = pointItem.get("stpnm").toString();
             point.setStopName(stopName);
+
+            point.setRoute(route);
 
             points.add(point);
         }
-
-        Route route = Route.getRouteById(this.routes, routeId);
-        route.setBus(routeBus);
         route.setPoints(points);
 
-        return route;
+        routeRepository.save(route);
+
+        pointRepository.saveAll(points);
+
+        return "Route " + route.getId() + ", Bus " + routeBus.getId() + " e Points inseridos com sucesso!";
     }
 }
