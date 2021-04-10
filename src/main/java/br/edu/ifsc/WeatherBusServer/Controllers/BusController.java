@@ -62,7 +62,7 @@ public class BusController {
 
     @RequestMapping(value = "/getFullRouteById/{routeId}", method = RequestMethod.GET)
     @SuppressWarnings("unchecked")
-    public Bus getFullRouteById(@PathVariable String routeId) throws ParseException, ClassNotFoundException {
+    public Route getFullRouteById(@PathVariable String routeId) throws ParseException, ClassNotFoundException {
         RestTemplate restTemplate = new RestTemplate();
         var routes = (Map<String, Object>)
                 restTemplate.getForObject(

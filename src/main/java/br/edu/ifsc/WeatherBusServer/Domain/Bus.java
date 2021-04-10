@@ -81,14 +81,6 @@ public class Bus {
         isDelayed = delayed;
     }
 
-    public Route getRoute() {
-        return route;
-    }
-
-    public void setRoute(Route route) {
-        this.route = route;
-    }
-
     public List<Prediction> getPredictions() {
         return predictions;
     }
@@ -106,7 +98,6 @@ public class Bus {
                 ", lon=" + lon +
                 ", destination='" + destination + '\'' +
                 ", isDelayed=" + isDelayed +
-                ", route=" + route +
                 ", predictions=" + predictions +
                 '}';
     }
