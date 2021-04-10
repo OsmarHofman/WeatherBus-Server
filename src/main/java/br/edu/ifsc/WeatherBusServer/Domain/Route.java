@@ -12,8 +12,6 @@ public class Route {
     private String id;
     private String name;
 
-    @JsonProperty("dir")
-    private String direction;
 
     @OneToOne
     @JoinColumn(name = "route_id")
@@ -25,10 +23,9 @@ public class Route {
     public Route() {
     }
 
-    public Route(String id, String name, String direction, Bus bus, List<Point> points) {
+    public Route(String id, String name, Bus bus, List<Point> points) {
         this.id = id;
         this.name = name;
-        this.direction = direction;
         this.bus = bus;
         this.points = points;
     }
@@ -47,14 +44,6 @@ public class Route {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDirection() {
-        return direction;
-    }
-
-    public void setDirection(String direction) {
-        this.direction = direction;
     }
 
     public List<Point> getPoints() {
@@ -86,7 +75,6 @@ public class Route {
         return "Route{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", direction='" + direction + '\'' +
                 ", bus=" + bus +
                 ", points=" + points +
                 '}';

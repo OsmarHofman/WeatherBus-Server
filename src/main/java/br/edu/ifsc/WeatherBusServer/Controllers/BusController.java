@@ -32,7 +32,7 @@ public class BusController {
         Bus bus = new Bus(new Date(), 41.848946, -87.8520887, "Destination X", false, predictions);
         bus.setId("0");
 
-        Route route = new Route("0", "Centro-Coral", "Sul", bus, Arrays.asList(point1, point2));
+        Route route = new Route("0", "Centro-Coral", bus, Arrays.asList(point1, point2));
         route.setId("0");
 
         return bus;
@@ -41,6 +41,7 @@ public class BusController {
     @RequestMapping(value = "/getRoutes", method = RequestMethod.GET)
     @SuppressWarnings("unchecked")
     public List<Route> getBusRoutes() {
+        this.routes = new ArrayList<>();
         //TODO salvar em banco
 
         RestTemplate restTemplate = new RestTemplate();
@@ -105,8 +106,7 @@ public class BusController {
         Route route = Route.getRouteById(this.routes, routeId);
         route.setBus(routeBus);
         route.setPoints(points);
-        //TODO colocar a direction na route
 
-        return routeBus;
+        return route;
     }
 }
