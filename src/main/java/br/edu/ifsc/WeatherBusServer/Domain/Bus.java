@@ -14,7 +14,7 @@ public class Bus {
     private String destination;
     private boolean isDelayed;
 
-    @OneToOne(mappedBy = "bus")
+    @OneToOne(mappedBy = "routeBus")
     private Route route;
 
     @OneToMany(mappedBy = "bus")
@@ -89,10 +89,11 @@ public class Bus {
         this.predictions = predictions;
     }
 
+
     @Override
     public String toString() {
         return "Bus{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", timestamp=" + timestamp +
                 ", lat=" + lat +
                 ", lon=" + lon +

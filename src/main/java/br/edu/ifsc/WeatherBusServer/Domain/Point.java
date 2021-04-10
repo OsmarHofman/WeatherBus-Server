@@ -1,5 +1,7 @@
 package br.edu.ifsc.WeatherBusServer.Domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -15,8 +17,12 @@ public class Point {
     private String stopName;
 
     @ManyToOne
-    @JoinColumn(name = "bus_id")
+    @JoinColumn(name = "route_id")
+    @JsonIgnore
     private Route route;
+
+    @OneToOne(mappedBy = "point")
+    private Weather weather;
 
     public Point() {
     }
@@ -66,6 +72,14 @@ public class Point {
 
     public void setStopName(String stopName) {
         this.stopName = stopName;
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
     }
 
     @Override

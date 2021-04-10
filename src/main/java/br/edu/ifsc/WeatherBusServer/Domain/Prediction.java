@@ -1,5 +1,7 @@
 package br.edu.ifsc.WeatherBusServer.Domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -16,6 +18,7 @@ public class Prediction {
 
     @ManyToOne
     @JoinColumn(name = "bus_id")
+    @JsonIgnore
     private Bus bus;
 
 
@@ -58,6 +61,14 @@ public class Prediction {
 
     public void setStopName(String stopName) {
         this.stopName = stopName;
+    }
+
+    public Bus getBus() {
+        return bus;
+    }
+
+    public void setBus(Bus bus) {
+        this.bus = bus;
     }
 
     @Override

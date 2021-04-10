@@ -1,6 +1,6 @@
 package br.edu.ifsc.WeatherBusServer.Domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,9 +13,9 @@ public class Route {
     private String name;
 
 
-    @OneToOne
-    @JoinColumn(name = "route_id")
-    private Bus bus;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "bus_id", referencedColumnName = "id")
+    private Bus routeBus;
 
     @OneToMany(mappedBy = "route")
     private List<Point> points;
@@ -23,10 +23,10 @@ public class Route {
     public Route() {
     }
 
-    public Route(String id, String name, Bus bus, List<Point> points) {
+    public Route(String id, String name, Bus routeBus, List<Point> points) {
         this.id = id;
         this.name = name;
-        this.bus = bus;
+        this.routeBus = routeBus;
         this.points = points;
     }
 
@@ -54,13 +54,14 @@ public class Route {
         this.points = points;
     }
 
-    public Bus getBus() {
-        return bus;
+    public Bus getRouteBus() {
+        return routeBus;
     }
 
-    public void setBus(Bus bus) {
-        this.bus = bus;
+    public void setRouteBus(Bus bus) {
+        this.routeBus = bus;
     }
+
 
     public static Route getRouteById(List<Route> routes, String id) throws ClassNotFoundException {
         for (Route route : routes) {
@@ -75,7 +76,7 @@ public class Route {
         return "Route{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", bus=" + bus +
+                ", bus=" + routeBus +
                 ", points=" + points +
                 '}';
     }
