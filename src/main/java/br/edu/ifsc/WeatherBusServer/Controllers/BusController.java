@@ -53,11 +53,9 @@ public class BusController {
     }
 
     @RequestMapping(value = "/getRoutes", method = RequestMethod.GET)
-    @SuppressWarnings("unchecked")
     public List<Route> getBusRoutes() {
-        List<Route> routes = routeRepository.findAll();
 
-        return routes;
+        return routeRepository.findAll();
     }
 
     @RequestMapping(value = "/insertData/{routeId}", method = RequestMethod.GET)
@@ -154,8 +152,10 @@ public class BusController {
             point.setLon(Double.parseDouble(pointItem.get("lon").toString()));
             String isStop = pointItem.get("typ").toString();
             String stopName = null;
-            if (isStop.equals("S"))
+            if (isStop.equals("S")) {
                 stopName = pointItem.get("stpnm").toString();
+                point.setStopId(Integer.parseInt(pointItem.get("stpid").toString()));
+            }
             point.setStopName(stopName);
 
             point.setRoute(route);
@@ -169,5 +169,23 @@ public class BusController {
         pointRepository.saveAll(points);
 
         return "Route " + route.getId() + ", Bus " + routeBus.getId() + " e Points inseridos com sucesso!";
+    }
+
+    @RequestMapping(value = "/getPredictionByStopId/{stopId}", method = RequestMethod.GET)
+    @SuppressWarnings("unchecked")
+    public Prediction getPredictionByStopId(@PathVariable int stopId) throws ParseException {
+        RestTemplate restTemplate = new RestTemplate();
+        var mappedPrediction = (Map<String, Object>)
+                restTemplate.getForObject(
+                        "http://www.ctabustracker.com/bustime/api/v2/getpredictions?key=5vpALinxKHsDWZZXSvwhVqLda&stpid=" + stopId + "&format=json", Map.class)
+                        .get("bustime-response");
+        List<Map<String, Object>> predictionList = (List<Map<String, Object>>) mappedPrediction.get("prd");
+        Map<String, Object> predictionItem = predictionList.get(0);
+        Prediction prediction = new Prediction();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+        prediction.setTimestamp(sdf.parse(predictionItem.get("prdtm").toString()));
+        prediction.setStopName(predictionItem.get("stpnm").toString());
+        prediction.setDistanceToDestination((float) (Float.parseFloat(predictionItem.get("dstp").toString()) / 3.281));
+        return prediction;
     }
 }

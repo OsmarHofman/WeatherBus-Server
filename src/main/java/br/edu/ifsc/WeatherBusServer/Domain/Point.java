@@ -14,6 +14,7 @@ public class Point {
     private int sequenceNumber;
     private double lat;
     private double lon;
+    private int stopId;
     private String stopName;
 
     @ManyToOne
@@ -32,6 +33,14 @@ public class Point {
         this.lat = lat;
         this.lon = lon;
         this.stopName = stopName;
+    }
+
+    public int getStopId() {
+        return stopId;
+    }
+
+    public void setStopId(int stopId) {
+        this.stopId = stopId;
     }
 
     public Integer getId() {
