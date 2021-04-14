@@ -23,30 +23,35 @@ public class WeatherController {
     public Weather getWeather() {
         Weather weather = new Weather();
         weather.setLocalObservationDateTime(new Date());
-        weather.setEpochTime("1616805420");
         weather.setWeatherText("Partly cloudy");
-        weather.setWeatherIcon(1);
         weather.setHasPrecipitation(true);
         weather.setPrecipitationType("Hail");
         weather.setDayTime(false);
-        weather.setCelciusTemperature(8);
-        weather.setAccuWeatherSiteLink("http://www.accuweather.com/en/de/berlin/10178/current-weather/178087?lang=en-us");
+        weather.setCelsiusTemperature(8);
         return weather;
     }
 
-    @RequestMapping(value = "/currentWeather", method = RequestMethod.GET)
+    @RequestMapping(value = "/getCurrentWeather", method = RequestMethod.GET)
     public Weather getCurrentChicagoWeather() {
         RestTemplate restTemplate = new RestTemplate();
         Weather[] weathers = restTemplate.getForObject(
-                "http://dataservice.accuweather.com/currentconditions/v1/348308?apikey=9Sz5Xrb6oB12NQin96K7ICRTKy3msslr", Weather[].class);
+                "http://dataservice.accuweather.com/currentconditions/v1/348308?apikey=9Sz5Xrb6oB12NQin96K7ICRTKy3msslr&language=pt-br", Weather[].class);
         return (weathers != null) ? weathers[0] : null;
+    }
+
+    @RequestMapping(value = "/getYesterdayWeather", method = RequestMethod.GET)
+    public Weather getYesterdayChicagoWeather() {
+        RestTemplate restTemplate = new RestTemplate();
+        Weather[] weathers = restTemplate.getForObject(
+                "http://dataservice.accuweather.com/currentconditions/v1/348308/historical/24?apikey=9Sz5Xrb6oB12NQin96K7ICRTKy3msslr&language=pt-br", Weather[].class);
+        return (weathers != null) ? weathers[weathers.length - 1] : null;
     }
 
     @RequestMapping(value = "/insertCurrentWeather", method = RequestMethod.GET)
     public void insertCurrentChicagoWeather(){
         RestTemplate restTemplate = new RestTemplate();
         Weather[] weathers = restTemplate.getForObject(
-                "http://dataservice.accuweather.com/currentconditions/v1/348308?apikey=9Sz5Xrb6oB12NQin96K7ICRTKy3msslr", Weather[].class);
+                "http://dataservice.accuweather.com/currentconditions/v1/348308?apikey=9Sz5Xrb6oB12NQin96K7ICRTKy3msslr&language=pt-br", Weather[].class);
         if(weathers != null){
             repository.save(weathers[0]);
         }

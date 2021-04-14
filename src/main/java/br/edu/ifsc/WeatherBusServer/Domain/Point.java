@@ -22,9 +22,6 @@ public class Point {
     @JsonIgnore
     private Route route;
 
-    @OneToOne(mappedBy = "point")
-    private Weather weather;
-
     public Point() {
     }
 

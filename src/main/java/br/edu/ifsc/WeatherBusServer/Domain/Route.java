@@ -17,6 +17,10 @@ public class Route {
     @JoinColumn(name = "bus_id", referencedColumnName = "id")
     private Bus routeBus;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "weather_id", referencedColumnName = "id")
+    private Weather weather;
+
     @OneToMany(mappedBy = "route")
     private List<Point> points;
 
@@ -62,6 +66,13 @@ public class Route {
         this.routeBus = bus;
     }
 
+    public Weather getWeather() {
+        return weather;
+    }
+
+    public void setWeather(Weather weather) {
+        this.weather = weather;
+    }
 
     public static Route getRouteById(List<Route> routes, String id) throws ClassNotFoundException {
         for (Route route : routes) {
@@ -74,9 +85,10 @@ public class Route {
     @Override
     public String toString() {
         return "Route{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", bus=" + routeBus +
+                ", routeBus=" + routeBus +
+                ", weather=" + weather +
                 ", points=" + points +
                 '}';
     }

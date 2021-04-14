@@ -18,14 +18,8 @@ public class Weather {
     @JsonProperty("LocalObservationDateTime")
     private Date localObservationDateTime;
 
-    @JsonProperty("EpochTime")
-    private String epochTime;
-
     @JsonProperty("WeatherText")
     private String weatherText;
-
-    @JsonProperty("WeatherIcon")
-    private int weatherIcon;
 
     @JsonProperty("HasPrecipitation")
     private boolean hasPrecipitation;
@@ -36,14 +30,10 @@ public class Weather {
     @JsonProperty("IsDayTime")
     private boolean isDayTime;
 
-    private double celciusTemperature;
+    private double celsiusTemperature;
 
-    @JsonProperty("Link")
-    private String accuWeatherSiteLink;
-
-    @OneToOne
-    @JoinColumn(name = "point_id")
-    private Point point;
+    @OneToOne(mappedBy = "weather")
+    private Route route;
 
     public Weather() {
     }
@@ -52,7 +42,7 @@ public class Weather {
     @SuppressWarnings("unchecked")
     private void celciusTemperatureDeserializer(Map<String, Object> serializedCelcius) {
         Map<String, Object> metric = (Map<String, Object>) serializedCelcius.get("Metric");
-        celciusTemperature = (double) metric.get("Value");
+        celsiusTemperature = (double) metric.get("Value");
     }
 
     public Date getLocalObservationDateTime() {
@@ -63,14 +53,6 @@ public class Weather {
         this.localObservationDateTime = localObservationDateTime;
     }
 
-    public String getEpochTime() {
-        return epochTime;
-    }
-
-    public void setEpochTime(String epochTime) {
-        this.epochTime = epochTime;
-    }
-
     public String getWeatherText() {
         return weatherText;
     }
@@ -79,13 +61,6 @@ public class Weather {
         this.weatherText = weatherText;
     }
 
-    public int getWeatherIcon() {
-        return weatherIcon;
-    }
-
-    public void setWeatherIcon(int weatherIcon) {
-        this.weatherIcon = weatherIcon;
-    }
 
     public boolean isHasPrecipitation() {
         return hasPrecipitation;
@@ -111,35 +86,25 @@ public class Weather {
         isDayTime = dayTime;
     }
 
-    public double getCelciusTemperature() {
-        return celciusTemperature;
+    public double getCelsiusTemperature() {
+        return celsiusTemperature;
     }
 
-    public void setCelciusTemperature(float celciusTemperature) {
-        this.celciusTemperature = celciusTemperature;
+    public void setCelsiusTemperature(float celciusTemperature) {
+        this.celsiusTemperature = celciusTemperature;
     }
 
-    public String getAccuWeatherSiteLink() {
-        return accuWeatherSiteLink;
-    }
-
-    public void setAccuWeatherSiteLink(String accuWeatherSiteLink) {
-        this.accuWeatherSiteLink = accuWeatherSiteLink;
-    }
 
     @Override
     public String toString() {
         return "Weather{" +
                 "id=" + id +
-                ", LocalObservationDateTime=" + localObservationDateTime +
-                ", EpochTime='" + epochTime + '\'' +
-                ", WeatherText='" + weatherText + '\'' +
-                ", WeatherIcon=" + weatherIcon +
-                ", HasPrecipitation=" + hasPrecipitation +
-                ", PrecipitationType='" + precipitationType + '\'' +
-                ", IsDayTime=" + isDayTime +
-                ", CelciusTemperature=" + celciusTemperature +
-                ", AccuWeatherSiteLink='" + accuWeatherSiteLink + '\'' +
+                ", localObservationDateTime=" + localObservationDateTime +
+                ", weatherText='" + weatherText + '\'' +
+                ", hasPrecipitation=" + hasPrecipitation +
+                ", precipitationType='" + precipitationType + '\'' +
+                ", isDayTime=" + isDayTime +
+                ", celciusTemperature=" + celsiusTemperature +
                 '}';
     }
 }
